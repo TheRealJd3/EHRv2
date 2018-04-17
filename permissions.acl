@@ -1,0 +1,67 @@
+/**
+ * Access control rules for tutorial-network
+ */
+rule Patientonlyseethemselves{
+  description: "Patients can see  their own record only"
+  participant(t): "ehr.Patient"
+  operation: READ
+  resource(v): "ehr.Patient"
+  condition: (v.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+rule Patientonlyseetheirinfo {
+  description: "Patients can see/work with their own Commodities"
+  participant(t): "ehr.Patient"
+  operation: READ
+  resource(c): "ehr.PatientInfo"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+rule Patientownhistory{
+  description: "Patients should be able to see the history of their own transactions only"
+  participant(t): "ehr.Patient"
+  operation: READ
+  resource(v): "org.hyperledger.composer.system.HistorianRecord"
+  condition: (v.participantInvoking.getIdentifier() != t.getIdentifier())
+  action: DENY
+}
+rule Doctorcansubmitpatientrecords{
+    description: "Enable Doctors to submit records"
+    participant: "ehr.Doctor"
+    operation: ALL
+    resource: "ehr.PatientInfo"
+    action: ALLOW
+}
+rule Doctorcanadmitpatients{
+    description: "Enable Doctors to admit patients"
+    participant: "ehr.Doctor"
+    operation: ALL
+    resource: "ehr.Patient"
+    action: ALLOW
+}
+rule Adminseethemselves {
+  // Since admin can oversee all patient info to check cases
+  description: "Admins can see and update their own record"
+  participant: "ehr.Head"
+  operation: READ, UPDATE, CREATE
+  resource: "**"
+  action: ALLOW
+}
+/**
+ * Sample access control list.
+ */
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "ANY"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}

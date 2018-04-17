@@ -1,0 +1,23 @@
+/**
+ * Write your model definitions here
+ */
+
+namespace ehr.appointments
+import ehr.Patient
+import ehr.Doctor
+
+asset appointment identified by id{
+	o String id
+	o DateTime time
+	o DateTime realTime
+}
+
+concept Resources{
+  -->Doctor doctor
+}
+
+transaction addAppointment{
+	o DateTime time 
+	o DateTime realTime
+	--> Patient patient
+}

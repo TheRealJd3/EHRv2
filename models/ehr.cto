@@ -1,0 +1,120 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+namespace ehr
+
+participant SampleParticipant identified by participantId {
+  o String participantId
+  o String firstName
+  o String lastName
+}
+
+asset SampleAsset identified by assetId {
+  o String assetId
+  --> SampleParticipant owner
+  o String value
+}
+
+transaction SampleTransaction {
+  --> SampleAsset asset
+  o String newValue
+}
+
+event SampleEvent {
+  --> SampleAsset asset
+  o String oldValue
+  o String newValue
+}
+
+asset PatientInfo identified by id {
+  --> Patient owner
+  o String id  //String chosen like userids alternative integer choosing string for now
+  o Gender gender optional
+  o DateTime dayOfBirth optional
+  o Integer phonenumber optional
+  o Nationality nationality optional
+  o String Diagnosis 
+  o String[] medicationArray optional
+  o String[] pastVisitsArray optional
+}
+
+participant Doctor identified by id {
+  o String id
+  o String title
+  o String firstname
+  o String lastname
+  o String department
+  o Integer salary optional
+}
+
+participant Head identified by id{
+  o String id
+  o String title
+  o String firstname
+  o String lastname
+  
+}
+
+participant Patient identified by id {
+  o String id
+  o String title
+  o String firstname
+  o String lastname
+  o DateTime lastvisit 
+  o Double balanceDue optional
+  
+}
+
+enum Gender {
+  o MALE
+  o FEMALE
+  o OTHER
+}
+enum Nationality {
+  o AMERICAN
+  o BRITISH
+  o INDIAN
+  o PAKISTANI
+  o CANADIAN
+  o EMIRATI
+  o OTHER
+}
+concept Visits {
+  o DateTime visitDate
+  o String procedure optional
+  o String doctor optional 
+  o String[] medicinePrescribed optional 
+}
+
+
+transaction updateMedication {
+  --> PatientInfo asset
+   o String newmedication
+  
+}
+
+transaction updatePastVisits {
+  --> PatientInfo asset
+   o String newvisit
+  
+}
+
+transaction updateContact {
+  --> PatientInfo asset
+   o Integer newphonenumber
+}

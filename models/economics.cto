@@ -1,0 +1,47 @@
+/**
+ * Write your model definitions here
+ */
+
+
+namespace ehr.economics
+import ehr.Patient
+
+
+concept Expenses {//hospital expenses
+  o Double quantityofSupplies
+  o Double staff
+  o Double medications
+}
+
+asset Bill identified by billID {//bill of patient
+  o String billID
+  --> Patient owner
+  o String moneyID
+  o Double amount
+  o Boolean paid  //y or n
+}
+
+asset HospitalSupplies identified by supplyID {
+  o String supplyID
+  o String drugName
+  o Double drugAmount
+}
+
+asset HospitalMoneyPool identified by moneyID {
+  o String moneyID
+  o Double moneyPool
+}
+
+enum SupplyState {
+  o full
+  o low
+  o empty
+}
+
+transaction SendBill {
+  --> Bill bill
+}
+
+transaction PayBill {
+  --> Bill bill
+}
